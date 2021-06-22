@@ -1,14 +1,12 @@
 import React, {FC} from 'react';
 import styled from "styled-components";
 
-const SLayout = styled.main`
+const SLayout = styled.div`
   display: flex;
   flex-direction: column;
 
   height: 100vh;
   width: 100vw;
-
-  padding: 0.5rem;
 
   background: ${({theme}) => theme.white};
 

@@ -3,19 +3,33 @@ import ReactDOM from 'react-dom';
 import {ThemeProvider} from 'styled-components';
 
 // Styles
-import theme from './styles/theme';
-import './styles/index.css';
+import theme from './style/theme';
+import './style/index.css';
+
+// Store
+import './store'
 
 // Components
-import Layout from "./components/layout";
-import Header from "./components/header";
-import Content from "./components/content";
+import Layout from "./component/layout";
+import Header from "./component/header";
+import Content from "./component/content";
+import Current from "./component/current";
+import Voltage from "./component/voltage";
+import Temperature from "./component/temperature";
+import Humidity from "./component/humidity";
+import Power from "./component/power";
 
 const App: FC = () => (
     <ThemeProvider theme={theme}>
         <Layout>
             <Header/>
-            <Content/>
+            <Content>
+                <Current/>
+                <Voltage/>
+                <Power/>
+                <Temperature/>
+                <Humidity/>
+            </Content>
         </Layout>
     </ThemeProvider>
 )

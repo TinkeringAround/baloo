@@ -7,7 +7,9 @@ const THEME = {
     black: '#000',
 
     // Colors
-    lightYellow: '#FFE7AF',
+    green: '#06D6A0',
+    red: '#EF476F',
+    blue: '#1B9AAA',
     yellow: '#F4BC3A'
 }
 
