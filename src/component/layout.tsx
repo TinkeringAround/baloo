@@ -4,9 +4,7 @@ import styled from "styled-components";
 const SLayout = styled.div`
   display: flex;
   flex-direction: column;
-
-  height: 100vh;
-  width: 100vw;
+  align-items: center;
 
   background: ${({theme}) => theme.white};
 

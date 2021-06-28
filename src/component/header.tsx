@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 const SHeader = styled.header`
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 
   height: 4.5rem;
@@ -16,26 +18,12 @@ const SHeader = styled.header`
   font-size: 2rem;
   font-weight: bold;
 
-  div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    width: 50%;
-  }
-  
   box-sizing: border-box;
 `;
 
-const Header: FC = () => (
+const Header: FC = ({children}) => (
     <SHeader>
-        <div>
-            <span>B</span>
-            <span>A</span>
-            <span>L</span>
-            <span>O</span>
-            <span>O</span>
-        </div>
+        {children}
     </SHeader>
 )
 
