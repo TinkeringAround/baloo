@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import styled from "styled-components";
+import React, {FC, useContext} from 'react';
+import styled, {ThemeContext} from "styled-components";
 
 const SHeader = styled.header`
   display: flex;
@@ -21,10 +21,19 @@ const SHeader = styled.header`
   box-sizing: border-box;
 `;
 
-const Header: FC = ({children}) => (
-    <SHeader>
-        {children}
-    </SHeader>
-)
+interface Props {
+    isHealthy: boolean;
+}
+
+const Header: FC<Props> = ({children, isHealthy}) => {
+    const theme = useContext(ThemeContext);
+    const color = isHealthy ? 'yellow' : 'red';
+
+    return (
+        <SHeader style={{background: theme[color]}}>
+            {children}
+        </SHeader>
+    )
+}
 
 export default Header;

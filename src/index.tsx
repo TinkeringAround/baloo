@@ -24,7 +24,7 @@ import Humidity from './component/humidity';
 import Power from './component/power';
 import Reload from './component/reload';
 import Logo from './component/logo';
-import Health from "./component/health";
+import Loading from "./component/loading";
 
 const App: FC = () => {
     const {data, error, loading, fetchData} = useData();
@@ -36,12 +36,12 @@ const App: FC = () => {
     return (
         <ThemeProvider theme={theme}>
             <Layout>
-                <Header>
+                {loading && <Loading/>}
+                <Header isHealthy={!error}>
                     <Logo/>
                     <Reload reload={fetchData} disabled={loading}/>
                 </Header>
                 <Content>
-                    <Health isHealthy={!error} loading={loading}/>
                     <Current/>
                     <Voltage/>
                     <Power/>

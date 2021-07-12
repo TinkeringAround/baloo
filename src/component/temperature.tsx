@@ -12,7 +12,7 @@ const Temperature: FC = () => {
 
     return (
         <Section width="47.5%">
-            <Base icon="temperature" value={`${temperature}°C`}/>
+            <Base icon="temperature" value={`${temperature.toFixed(0)}°C`}/>
         </Section>
     );
 };

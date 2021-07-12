@@ -12,7 +12,7 @@ const Humidity: FC = () => {
 
     return (
         <Section width="47.5%">
-            <Base icon="humidity" value={`${humidity}%`}/>
+            <Base icon="humidity" value={`${humidity.toFixed(0)}%`}/>
         </Section>
     );
 };

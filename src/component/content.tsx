@@ -11,7 +11,7 @@ const SContent = styled.main`
   width: 100%;
   max-width: 400px;
   
-  padding: 0 1rem;
+  padding: 1rem;
 
   border-radius: 2px;
 

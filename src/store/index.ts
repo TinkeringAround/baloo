@@ -1,6 +1,7 @@
 import create, {State} from "zustand";
 
 export interface BalooStore extends State {
+    readonly capacity: number;
     readonly chargingCurrent: number;
     readonly loadCurrent: number;
     readonly voltage: number;
@@ -9,6 +10,7 @@ export interface BalooStore extends State {
 }
 
 export const INITIAL_STATE = {
+    capacity: 0,
     chargingCurrent: 0,
     loadCurrent: 0,
     voltage: 0,

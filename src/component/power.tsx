@@ -13,7 +13,7 @@ const Power: FC = () => {
 
     return (
         <Section width="47.5%">
-            <Base icon="plug" value={`${power}W`}/>
+            <Base icon="plug" value={`${power.toFixed(2)}W`}/>
         </Section>
     );
 };

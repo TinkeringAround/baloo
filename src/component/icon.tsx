@@ -3,6 +3,14 @@ import {ThemeContext} from 'styled-components';
 
 // ===============================================
 const icons = {
+    close: {
+        viewBox: '0 0 352 512',
+        title: 'Schließen',
+        path: (color: string) => (
+            <path fill={color}
+                  d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/>
+        )
+    },
     humidity: {
         viewBox: '0 0 39 32',
         title: 'Luftfeuchtigkeit',
@@ -83,20 +91,23 @@ const icons = {
 };
 
 // ===============================================
-export type TIcon = 'humidity' | 'temperature' | 'settings' | 'reload' | 'battery' | 'plug';
+export type TIcon = 'close' | 'humidity' | 'temperature' | 'settings' | 'reload' | 'battery' | 'plug';
 
 type Props = {
     type: TIcon;
 
     height: string;
     width: string;
+
+    click?: () => void;
 };
 
-const Icon: FC<Props> = ({type, height, width}) => {
+const Icon: FC<Props> = ({type, height, width, click}) => {
     const {yellow} = useContext(ThemeContext);
 
     return (
-        <svg viewBox={icons[type].viewBox} height={height} width={width} xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox={icons[type].viewBox} height={height} width={width} xmlns="http://www.w3.org/2000/svg"
+             onClick={click}>
             <title>{icons[type].title}</title>
             {icons[type].path(yellow)}
         </svg>

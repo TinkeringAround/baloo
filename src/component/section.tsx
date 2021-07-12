@@ -13,10 +13,12 @@ const SSection = styled.section`
 
 interface Props {
     width: string;
+
+    click?: () => void;
 }
 
-const Section: FC<Props> = ({width, children}) => (
-    <SSection style={{width}}>
+const Section: FC<Props> = ({width, children, click}) => (
+    <SSection style={{width}} onClick={click}>
         {children}
     </SSection>
 )

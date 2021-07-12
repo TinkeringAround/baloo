@@ -74,7 +74,7 @@ const Current: FC = () => {
                 <p className="values">
                     <span className="charge">{chargingCurrent.toFixed(2)}A <b>▲</b></span>
                     <span className="load">{loadCurrent.toFixed(2)}A <b>▼</b></span>
-                    <span>{(chargingCurrent - loadCurrent).toFixed(2)}A</span>
+                    <span>{(loadCurrent - chargingCurrent).toFixed(2)}A</span>
                 </p>
             </SCurrent>
         </Section>
