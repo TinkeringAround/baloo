@@ -4,7 +4,7 @@ import THEME from '../style/theme';
 
 // Store
 import { useBaloo } from '../store';
-import { selectHumidity } from '../store/selectors';
+import { selectCapacity } from '../store/selectors';
 
 // Hooks
 import useConfiguration from '../hook/useConfiguration';
@@ -18,31 +18,31 @@ import Graph from './graph';
 import { getIntervalFor, toSerie, toValue } from '../util';
 import { Fields } from '../types';
 
-const Humidity: FC = () => {
-  const { SAMPLES, TIME_REF_LONG } = useConfiguration();
-  const { humidities } = useBaloo();
-  const humidity = useBaloo(selectHumidity);
+const Capacity: FC = () => {
+  const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
+  const { capacities } = useBaloo();
+  const capacity = useBaloo(selectCapacity);
   const [data, setData] = useState<Serie[]>([]);
 
   useEffect(() => {
-    setData([toSerie(humidities, 'humidity', SAMPLES)]);
-  }, [humidities]);
+    setData([toSerie(capacities, 'capacity', SAMPLES)]);
+  }, [capacities]);
 
   return (
-    <Section id={Fields.humidity}>
+    <Section id={Fields.capacity}>
       <Base
-        icons={['humidity']}
-        colors={[THEME.blue]}
-        title='Feuchtigkeit'
-        values={[toValue(humidity, '%')]} />
+        icons={['battery']}
+        colors={[THEME.yellow]}
+        title='Akkukapazität'
+        values={[toValue(capacity, '%')]} />
       <Graph
         data={data}
-        colors={[THEME.blue]}
+        colors={[THEME.yellow]}
         maxY={100}
         minY={0}
         legends={{
-          left: 'Feuchtigkeit [%]',
-          bottom: getIntervalFor(humidities.length, TIME_REF_LONG)
+          left: 'Akku [%]',
+          bottom: getIntervalFor(capacities.length, TIME_REF_SHORT)
         }}
         enableArea={false}
       />
@@ -50,4 +50,4 @@ const Humidity: FC = () => {
   );
 };
 
-export default Humidity;
+export default Capacity;

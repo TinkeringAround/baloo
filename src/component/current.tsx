@@ -1,84 +1,57 @@
-import React, {FC} from 'react';
-import styled from "styled-components";
+import React, { FC, useEffect, useState } from 'react';
+import { Serie } from '@nivo/line';
+import THEME from '../style/theme';
 
 // Store
-import {useBaloo} from "../store";
+import { useBaloo } from '../store';
+import { selectChargingCurrent, selectLoadCurrent } from '../store/selectors';
+
+// Hooks
+import useConfiguration from '../hook/useConfiguration';
 
 // Components
-import Section from "./section";
+import Section from './section';
+import Base from './base';
+import Graph from './graph';
 
-const SCurrent = styled.div<{ isCharging: boolean, isFlowing: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  height: 100%;
-
-  .charging {
-    --color: ${({theme, isCharging}) => theme[isCharging ? 'blue' : 'red']};
-
-    height: 1.5rem;
-    width: 90%;
-
-    background: repeating-linear-gradient(90deg, var(--color) 0 calc(25% - 5px), white 0 25%) left/calc(4*100%/3) 100%;
-    ${({isFlowing, theme}) => isFlowing ? '' : `background: ${theme.yellow};`};
-
-    ${({
-         isFlowing,
-         isCharging
-       }) => isFlowing ? `animation: charging 0.5s infinite linear ${isCharging ? 'reverse' : ''};` : ''};
-
-    border-radius: 3px;
-
-    @keyframes charging {
-      100% {
-        background-position: right;
-      }
-    }
-  }
-
-  .values {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin: 1rem 0 0;
-
-    span {
-      &.charge b {
-        color: ${({theme}) => theme.blue};
-      }
-
-      &.load b {
-        color: ${({theme}) => theme.red};
-      }
-    }
-
-    span:not(:last-child) {
-      margin-right: 2rem;
-    }
-  }
-`;
+// Utils
+import { getIntervalFor, toSerie, toValue } from '../util';
+import { Fields } from '../types';
 
 const Current: FC = () => {
-    const {chargingCurrent, loadCurrent} = useBaloo();
+  const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
+  const { loadCurrents, chargingCurrents } = useBaloo();
+  const chargingCurrent = useBaloo(selectChargingCurrent);
+  const loadCurrent = useBaloo(selectLoadCurrent);
+  const [data, setData] = useState<Serie[]>([]);
 
-    const isCharging = chargingCurrent > 0 && chargingCurrent >= loadCurrent;
-    const isFlowing = chargingCurrent !== 0 || loadCurrent !== 0;
+  useEffect(() => {
+    setData([
+      toSerie(chargingCurrents, 'Ladestrom', SAMPLES),
+      toSerie(loadCurrents, 'Laststrom', SAMPLES)
+    ]);
+  }, [loadCurrents, chargingCurrents]);
 
-    return (
-        <Section width="100%">
-            <SCurrent isCharging={isCharging} isFlowing={isFlowing}>
-                <div className="charging"/>
-                <p className="values">
-                    <span className="charge">{chargingCurrent.toFixed(2)}A <b>▲</b></span>
-                    <span className="load">{loadCurrent.toFixed(2)}A <b>▼</b></span>
-                    <span>{(loadCurrent - chargingCurrent).toFixed(2)}A</span>
-                </p>
-            </SCurrent>
-        </Section>
-    );
+  return (
+    <Section id={Fields.current}>
+      <Base
+        symbols={['▲', '▼']}
+        colors={[THEME.green, THEME.red]}
+        title='Lade-/Laststrom'
+        values={[
+          toValue(chargingCurrent, 'A', 2),
+          toValue(loadCurrent, 'A', 2)
+        ]} />
+      <Graph
+        data={data}
+        colors={[THEME.green, THEME.red]}
+        maxY={30}
+        legends={{
+          left: 'Strom [A]',
+          bottom: getIntervalFor(chargingCurrents.length, TIME_REF_SHORT)
+        }} />
+    </Section>
+  );
 };
 
 export default Current;
