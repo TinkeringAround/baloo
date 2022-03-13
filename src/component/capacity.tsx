@@ -15,8 +15,7 @@ import Base from './base';
 import Graph from './graph';
 
 // Utils
-import { getIntervalFor, toSerie, toValue } from '../util';
-import { Fields } from '../types';
+import { Fields, getIntervalFor, toSerie, toValue } from '../util';
 
 const Capacity: FC = () => {
   const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
