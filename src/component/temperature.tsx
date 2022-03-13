@@ -25,7 +25,7 @@ const Temperature: FC = () => {
 
   useEffect(() => {
     setData([toSerie(temperatures, 'temperature', SAMPLES)]);
-  }, [temperatures]);
+  }, [temperatures, SAMPLES]);
 
   return (
     <Section id={Fields.temperature}>

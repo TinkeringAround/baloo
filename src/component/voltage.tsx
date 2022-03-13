@@ -25,7 +25,7 @@ const Voltage: FC = () => {
 
   useEffect(() => {
     setData([toSerie(voltages, 'Spannung', SAMPLES)]);
-  }, [voltages]);
+  }, [voltages, SAMPLES]);
 
   return (
     <Section id={Fields.voltage}>

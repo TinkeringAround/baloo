@@ -25,7 +25,7 @@ const Capacity: FC = () => {
 
   useEffect(() => {
     setData([toSerie(capacities, 'capacity', SAMPLES)]);
-  }, [capacities]);
+  }, [capacities, SAMPLES]);
 
   return (
     <Section id={Fields.capacity}>

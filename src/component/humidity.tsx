@@ -25,7 +25,7 @@ const Humidity: FC = () => {
 
   useEffect(() => {
     setData([toSerie(humidities, 'humidity', SAMPLES)]);
-  }, [humidities]);
+  }, [humidities, SAMPLES]);
 
   return (
     <Section id={Fields.humidity}>

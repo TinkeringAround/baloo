@@ -29,7 +29,7 @@ const Current: FC = () => {
       toSerie(chargingCurrents, 'Ladestrom', SAMPLES),
       toSerie(loadCurrents, 'Laststrom', SAMPLES)
     ]);
-  }, [loadCurrents, chargingCurrents]);
+  }, [loadCurrents, chargingCurrents, SAMPLES]);
 
   return (
     <Section id={Fields.current}>

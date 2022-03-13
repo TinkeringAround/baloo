@@ -25,7 +25,7 @@ const Power: FC = () => {
 
   useEffect(() => {
     setData([toSerie(powers, 'power', SAMPLES)]);
-  }, [powers]);
+  }, [powers, SAMPLES]);
 
   return (
     <Section id={Fields.power}>
