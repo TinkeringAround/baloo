@@ -1,5 +1,5 @@
-import React, {FC} from 'react';
-import styled from "styled-components";
+import React, { FC } from 'react';
+import styled from 'styled-components';
 
 const SContent = styled.main`
   display: flex;
@@ -7,26 +7,23 @@ const SContent = styled.main`
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
+  align-content: flex-start;
+  grid-row-gap: 1rem;
 
   width: 100%;
-  max-width: 400px;
-  
   padding: 1rem;
 
   border-radius: 2px;
-
   box-sizing: border-box;
-  overflow: hidden auto;
 
-  > section:not(:last-child) {
-    margin-bottom: 0.5rem;
-  }
+  overflow: auto;
+  scroll-snap-type: y mandatory;
 `;
 
-const Content: FC = ({children}) => (
-    <SContent>
-        {children}
-    </SContent>
-)
+const Content: FC = ({ children }) => (
+  <SContent>
+    {children}
+  </SContent>
+);
 
 export default Content;
