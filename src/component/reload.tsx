@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 // Components
@@ -11,10 +11,9 @@ const SReload = styled.button`
 
   width: 40px;
   height: 40px;
-  
   margin-left: 1rem;
 
-  background: ${({theme}) => theme.light};
+  background: ${({ theme }) => theme.light};
 
   border-radius: 10px;
   outline: none;
@@ -22,14 +21,14 @@ const SReload = styled.button`
 `;
 
 interface Props {
-    disabled: boolean;
-    reload: () => {};
+  disabled: boolean;
+  reload: () => {};
 }
 
-const Reload: FC<Props> = ({disabled, reload}) => (
-    <SReload onClick={reload} disabled={disabled}>
-        <Icon type="reload" height="25px" width="25px"/>
-    </SReload>
+const Reload: FC<Props> = ({ disabled, reload }) => (
+  <SReload onClick={reload} disabled={disabled}>
+    <Icon type='reload' height='25px' width='25px' />
+  </SReload>
 );
 
 export default Reload;

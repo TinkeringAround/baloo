@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
 const SLoading = styled.div`
@@ -13,7 +13,7 @@ const SLoading = styled.div`
   width: 100%;
   height: 100%;
 
-  color: ${({theme}) => theme.yellow};
+  color: ${({ theme }) => theme.yellow};
   background: rgba(0, 0, 0, 0.5);
 
   animation: fadeIn 0.25s ease-in-out;
@@ -61,9 +61,9 @@ const SLoading = styled.div`
 `;
 
 const Loading: FC = () => (
-    <SLoading>
-        <div className="spinner"/>
-    </SLoading>
+  <SLoading>
+    <div className='spinner' />
+  </SLoading>
 );
 
 export default Loading;
