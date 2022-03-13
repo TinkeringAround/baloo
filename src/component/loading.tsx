@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-const SLoading = styled.div`
+const SLoading = styled.div<{ isHealthy: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@ const SLoading = styled.div`
   width: 100%;
   height: 100%;
 
-  color: ${({ theme }) => theme.yellow};
+  color: ${({ theme, isHealthy }) => isHealthy ? theme.yellow : theme.red};
   background: rgba(0, 0, 0, 0.5);
 
   animation: fadeIn 0.25s ease-in-out;
@@ -60,8 +60,12 @@ const SLoading = styled.div`
   }
 `;
 
-const Loading: FC = () => (
-  <SLoading>
+interface Props {
+  isHealthy: boolean;
+}
+
+const Loading: FC<Props> = ({ isHealthy }) => (
+  <SLoading isHealthy={isHealthy}>
     <div className='spinner' />
   </SLoading>
 );

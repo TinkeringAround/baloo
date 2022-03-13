@@ -1,18 +1,21 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
 
 // Hook
-import {useFetch} from "./useFetch";
+import { useFetch } from './useFetch';
 
 // Store
-import {BalooStore} from "../store";
+import { BalooDataEntry, BalooStore } from '../store';
+
+// Util
+import { toBalooStore } from '../store/model';
 
 export function useData() {
-    const {response, error, loading, fetchData} = useFetch('http://192.168.4.1/data');
-    const [data, setData] = useState<BalooStore | null>(null);
+  const { response, error, loading, fetchData } = useFetch('http://192.168.4.1/data');
+  const [data, setData] = useState<BalooStore | null>(null);
 
-    useEffect(() => {
-        response && setData(response);
-    }, [response])
+  useEffect(() => {
+    response && setData(toBalooStore(response as BalooDataEntry[]));
+  }, [response]);
 
-    return {data, error, loading, fetchData};
+  return { data, error, loading, fetchData };
 }

@@ -43,11 +43,11 @@ const App: FC = () => {
     <ThemeProvider theme={theme}>
       <Layout>
         <If condition={loading}>
-          <Loading />
+          <Loading isHealthy={!error} />
         </If>
         <Header isHealthy={!error}>
           <Logo />
-          <Reload reload={fetchData} disabled={loading} />
+          <Reload reload={fetchData} disabled={loading} isHealthy={!error} />
         </Header>
         <If condition={!!data && !error}>
           <Content>
