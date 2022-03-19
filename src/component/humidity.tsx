@@ -1,10 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Serie } from '@nivo/line';
-import THEME from '../style/theme';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { ThemeContext } from 'styled-components';
 
-// Store
-import { useBaloo } from '../store';
-import { selectHumidity } from '../store/selectors';
+// Context
+import { BalooStateContext } from '../context';
 
 // Hooks
 import useConfiguration from '../hook/useConfiguration';
@@ -15,35 +13,34 @@ import Base from './base';
 import Graph from './graph';
 
 // Utils
-import { Fields, getIntervalFor, toSerie, toValue } from '../util';
+import { Fields, getIntervalFor, toValue } from '../lib/util';
+import { Line, toLine } from '../lib/graph';
 
 const Humidity: FC = () => {
+  const theme = useContext(ThemeContext);
   const { SAMPLES, TIME_REF_LONG } = useConfiguration();
-  const { humidities } = useBaloo();
-  const humidity = useBaloo(selectHumidity);
-  const [data, setData] = useState<Serie[]>([]);
+  const { humidity, humidities } = useContext(BalooStateContext);
+  const [data, setData] = useState<Line[]>([]);
 
   useEffect(() => {
-    setData([toSerie(humidities, 'humidity', SAMPLES)]);
+    setData([toLine(humidities, 'humidity', SAMPLES)]);
   }, [humidities, SAMPLES]);
 
   return (
     <Section id={Fields.humidity}>
       <Base
         icons={['humidity']}
-        colors={[THEME.blue]}
+        colors={[theme.blue]}
         title='Feuchtigkeit'
         values={[toValue(humidity, '%')]} />
       <Graph
         data={data}
-        colors={[THEME.blue]}
+        colors={[theme.blue]}
         maxY={100}
         minY={0}
-        legends={{
-          left: 'Feuchtigkeit [%]',
-          bottom: getIntervalFor(humidities.length, TIME_REF_LONG)
-        }}
-        enableArea={false}
+        ySteps={5}
+        interval={getIntervalFor(humidities.length, TIME_REF_LONG)}
+        unit='%'
       />
     </Section>
   );

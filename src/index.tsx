@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -6,13 +6,11 @@ import { ThemeProvider } from 'styled-components';
 import theme from './style/theme';
 import './style/index.css';
 
+// Context
+import { BalooState, BalooStateContext, INITIAL_STATE } from './context';
+
 // Hooks
 import { useData } from './hook/useData';
-import { Breakpoint, useBreakpoint } from './hook/useBreakpoint';
-
-// Store
-import './store';
-import { useBaloo } from './store';
 
 // Components
 import Layout from './component/layout';
@@ -28,16 +26,15 @@ import Loading from './component/loading';
 import Current from './component/current';
 import Capacity from './component/capacity';
 import If from './component/if';
-import OverviewGraph from './component/overviewGraph';
-import OverviewList from './component/overviewList';
+import Overview from './component/overview';
 
 const App: FC = () => {
   const { data, error, loading, fetchData } = useData();
-  const breakPoint = useBreakpoint();
+  const [state, setState] = useState<BalooState>(INITIAL_STATE);
 
   useEffect(() => {
-    data && useBaloo.setState(data);
-  }, [data]);
+    data && setState(data);
+  }, [data, setState]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -50,20 +47,17 @@ const App: FC = () => {
           <Reload reload={fetchData} disabled={loading} isHealthy={!error} />
         </Header>
         <If condition={!!data && !error}>
-          <Content>
-            <If condition={breakPoint >= Breakpoint.m}>
-              <OverviewGraph />
-            </If>
-            <If condition={breakPoint < Breakpoint.m}>
-              <OverviewList />
-            </If>
-            <Capacity />
-            <Voltage />
-            <Current />
-            <Power />
-            <Temperature />
-            <Humidity />
-          </Content>
+          <BalooStateContext.Provider value={state}>
+            <Content>
+              <Overview />
+              <Capacity />
+              <Voltage />
+              <Current />
+              <Power />
+              <Temperature />
+              <Humidity />
+            </Content>
+          </BalooStateContext.Provider>
         </If>
       </Layout>
     </ThemeProvider>

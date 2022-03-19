@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export enum Breakpoint {
   xS,
@@ -8,45 +8,33 @@ export enum Breakpoint {
   xL
 }
 
-interface Size {
-  width: number;
-  height: number;
-}
-
 export const useBreakpoint = () => {
   const [breakpoint, setBreakPoint] = useState<Breakpoint>(Breakpoint.m);
-  const [windowSize, setWindowSize] = useState<Size>({ width: 0, height: 0 });
+  const [width, setWidth] = useState<number>(0);
 
-  const handleResize = () => {
-    setWindowSize({
-      width: window.innerWidth,
-      height: window.innerHeight
-    });
-  };
+  const handleResize = useCallback(() => {
+    setWidth(window.innerWidth);
+  }, [setWidth]);
+
+  useEffect(() => {
+    if (0 < width && width < 600)
+      setBreakPoint(Breakpoint.xS);
+    else if (600 < width && width < 960)
+      setBreakPoint(Breakpoint.s);
+    else if (960 < width && width < 1280)
+      setBreakPoint(Breakpoint.m);
+    else if (1280 < width && width < 1920)
+      setBreakPoint(Breakpoint.l);
+    else
+      setBreakPoint(Breakpoint.xL);
+  }, [width, setBreakPoint]);
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
     handleResize();
 
-    const { width } = windowSize;
-    if (0 < width && width < 600) {
-      setBreakPoint(Breakpoint.xS);
-    }
-    if (600 < width && width < 960) {
-      setBreakPoint(Breakpoint.s);
-    }
-    if (960 < width && width < 1280) {
-      setBreakPoint(Breakpoint.m);
-    }
-    if (1280 < width && width < 1920) {
-      setBreakPoint(Breakpoint.l);
-    }
-    if (width >= 1920) {
-      setBreakPoint(Breakpoint.xL);
-    }
-
     return () => window.removeEventListener('resize', handleResize);
-  }, [windowSize.width]);
+  }, [handleResize]);
 
   return breakpoint;
 };

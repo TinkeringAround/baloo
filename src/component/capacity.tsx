@@ -1,10 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Serie } from '@nivo/line';
-import THEME from '../style/theme';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { ThemeContext } from 'styled-components';
 
-// Store
-import { useBaloo } from '../store';
-import { selectCapacity } from '../store/selectors';
+// Context
+import { BalooStateContext } from '../context';
 
 // Hooks
 import useConfiguration from '../hook/useConfiguration';
@@ -14,36 +12,36 @@ import Section from './section';
 import Base from './base';
 import Graph from './graph';
 
-// Utils
-import { Fields, getIntervalFor, toSerie, toValue } from '../util';
+// Libs
+import { Fields, getIntervalFor, toValue } from '../lib/util';
+import { Line, toLine } from '../lib/graph';
 
 const Capacity: FC = () => {
+  const theme = useContext(ThemeContext);
   const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
-  const { capacities } = useBaloo();
-  const capacity = useBaloo(selectCapacity);
-  const [data, setData] = useState<Serie[]>([]);
+  const { capacity, capacities } = useContext(BalooStateContext);
+  const [data, setData] = useState<Line[]>([]);
 
   useEffect(() => {
-    setData([toSerie(capacities, 'capacity', SAMPLES)]);
+    setData([toLine(capacities, 'capacity', SAMPLES)]);
   }, [capacities, SAMPLES]);
 
   return (
     <Section id={Fields.capacity}>
       <Base
         icons={['battery']}
-        colors={[THEME.yellow]}
+        colors={[theme.yellow]}
         title='Akkukapazität'
         values={[toValue(capacity, '%')]} />
       <Graph
         data={data}
-        colors={[THEME.yellow]}
+        colors={[theme.yellow]}
         maxY={100}
         minY={0}
-        legends={{
-          left: 'Akku [%]',
-          bottom: getIntervalFor(capacities.length, TIME_REF_SHORT)
-        }}
-        enableArea={false}
+        ySteps={10}
+        interval={getIntervalFor(capacities.length, TIME_REF_SHORT)}
+        unit='%'
+        enableArea
       />
     </Section>
   );

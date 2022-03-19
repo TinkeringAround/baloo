@@ -12,7 +12,7 @@ const SBase = styled.div`
   align-items: center;
   flex: 1;
 
-  margin: 0.75rem 0.75rem;
+  margin: 0.75rem;
   padding: 0 1rem;
 
   background: ${({ theme }) => theme.white};

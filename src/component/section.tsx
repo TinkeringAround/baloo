@@ -19,10 +19,8 @@ const SSection = styled.section`
 
 interface Props {
   id: string;
-
   width?: string;
   height?: string;
-
   click?: () => void;
 }
 

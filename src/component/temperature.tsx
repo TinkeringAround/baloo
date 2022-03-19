@@ -1,10 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Serie } from '@nivo/line';
-import THEME from '../style/theme';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { ThemeContext } from 'styled-components';
 
-// Store
-import { useBaloo } from '../store';
-import { selectTemperature } from '../store/selectors';
+// Context
+import { BalooStateContext } from '../context';
 
 // Hooks
 import useConfiguration from '../hook/useConfiguration';
@@ -15,35 +13,34 @@ import Base from './base';
 import Graph from './graph';
 
 // Utils
-import { Fields, getIntervalFor, toSerie, toValue } from '../util';
+import { Fields, getIntervalFor, toValue } from '../lib/util';
+import { Line, toLine } from '../lib/graph';
 
 const Temperature: FC = () => {
+  const theme = useContext(ThemeContext);
   const { SAMPLES, TIME_REF_LONG } = useConfiguration();
-  const { temperatures } = useBaloo();
-  const temperature = useBaloo(selectTemperature);
-  const [data, setData] = useState<Serie[]>([]);
+  const { temperature, temperatures } = useContext(BalooStateContext);
+  const [data, setData] = useState<Line[]>([]);
 
   useEffect(() => {
-    setData([toSerie(temperatures, 'temperature', SAMPLES)]);
+    setData([toLine(temperatures, 'temperature', SAMPLES)]);
   }, [temperatures, SAMPLES]);
 
   return (
     <Section id={Fields.temperature}>
       <Base
         icons={['temperature']}
-        colors={[THEME.red]}
+        colors={[theme.red]}
         title='Temperatur'
         values={[toValue(temperature, '°C')]} />
       <Graph
         data={data}
-        colors={[THEME.red]}
+        colors={[theme.red]}
         maxY={40}
-        minY={-10}
-        legends={{
-          left: 'Temperatur [°C]',
-          bottom: getIntervalFor(temperatures.length, TIME_REF_LONG)
-        }}
-        enableArea={false}
+        minY={0}
+        ySteps={8}
+        interval={getIntervalFor(temperatures.length, TIME_REF_LONG)}
+        unit='°C'
       />
     </Section>
   );

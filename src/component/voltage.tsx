@@ -1,10 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Serie } from '@nivo/line';
-import THEME from '../style/theme';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { ThemeContext } from 'styled-components';
 
-// Store
-import { useBaloo } from '../store';
-import { selectVoltage } from '../store/selectors';
+// Context
+import { BalooStateContext } from '../context';
 
 // Hooks
 import useConfiguration from '../hook/useConfiguration';
@@ -14,35 +12,35 @@ import Section from './section';
 import Base from './base';
 import Graph from './graph';
 
-// Utils
-import { Fields, getIntervalFor, toSerie, toValue } from '../util';
+// Libs
+import { Fields, getIntervalFor, toValue } from '../lib/util';
+import { Line, toLine } from '../lib/graph';
 
 const Voltage: FC = () => {
+  const theme = useContext(ThemeContext);
   const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
-  const { voltages } = useBaloo();
-  const voltage = useBaloo(selectVoltage);
-  const [data, setData] = useState<Serie[]>([]);
+  const { voltage, voltages } = useContext(BalooStateContext);
+  const [data, setData] = useState<Line[]>([]);
 
   useEffect(() => {
-    setData([toSerie(voltages, 'Spannung', SAMPLES)]);
+    setData([toLine(voltages, 'Spannung', SAMPLES)]);
   }, [voltages, SAMPLES]);
 
   return (
     <Section id={Fields.voltage}>
       <Base
         icons={['bolt']}
-        colors={[THEME.blue]}
+        colors={[theme.blue]}
         title='Spannung'
         values={[toValue(voltage, 'V', 2)]} />
       <Graph
         data={data}
-        colors={[THEME.blue]}
-        minY={12}
-        legends={{
-          left: 'Spannung [V]',
-          bottom: getIntervalFor(voltages.length, TIME_REF_SHORT)
-        }}
-        enableArea={false}
+        colors={[theme.blue]}
+        maxY={14}
+        minY={10}
+        ySteps={4}
+        interval={getIntervalFor(voltages.length, TIME_REF_SHORT)}
+        unit='V'
       />
     </Section>
   );

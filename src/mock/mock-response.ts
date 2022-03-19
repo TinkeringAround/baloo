@@ -1,5 +1,5 @@
-import { BalooDataEntry } from './store';
-import { map } from './util';
+import { map } from '../lib/util';
+import { BalooDataEntry } from '../context';
 
 export const MOCK_RESPONSE = (): BalooDataEntry[] => {
   const entryCount = 2880;

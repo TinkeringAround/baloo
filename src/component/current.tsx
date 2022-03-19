@@ -1,10 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Serie } from '@nivo/line';
-import THEME from '../style/theme';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { ThemeContext } from 'styled-components';
 
-// Store
-import { useBaloo } from '../store';
-import { selectChargingCurrent, selectLoadCurrent } from '../store/selectors';
+// Context
+import { BalooStateContext } from '../context';
 
 // Hooks
 import useConfiguration from '../hook/useConfiguration';
@@ -15,19 +13,19 @@ import Base from './base';
 import Graph from './graph';
 
 // Utils
-import { Fields, getIntervalFor, toSerie, toValue } from '../util';
+import { Fields, getIntervalFor, toValue } from '../lib/util';
+import { Line, toLine } from '../lib/graph';
 
 const Current: FC = () => {
+  const theme = useContext(ThemeContext);
   const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
-  const { loadCurrents, chargingCurrents } = useBaloo();
-  const chargingCurrent = useBaloo(selectChargingCurrent);
-  const loadCurrent = useBaloo(selectLoadCurrent);
-  const [data, setData] = useState<Serie[]>([]);
+  const { chargingCurrent, loadCurrent, loadCurrents, chargingCurrents } = useContext(BalooStateContext);
+  const [data, setData] = useState<Line[]>([]);
 
   useEffect(() => {
     setData([
-      toSerie(chargingCurrents, 'Ladestrom', SAMPLES),
-      toSerie(loadCurrents, 'Laststrom', SAMPLES)
+      toLine(chargingCurrents, 'Ladestrom', SAMPLES),
+      toLine(loadCurrents, 'Laststrom', SAMPLES)
     ]);
   }, [loadCurrents, chargingCurrents, SAMPLES]);
 
@@ -35,20 +33,23 @@ const Current: FC = () => {
     <Section id={Fields.current}>
       <Base
         symbols={['▲', '▼']}
-        colors={[THEME.green, THEME.red]}
+        colors={[theme.green, theme.red]}
         title='Lade-/Laststrom'
         values={[
           toValue(chargingCurrent, 'A', 2),
           toValue(loadCurrent, 'A', 2)
-        ]} />
+        ]}
+      />
       <Graph
         data={data}
-        colors={[THEME.green, THEME.red]}
+        colors={[theme.green, theme.red]}
         maxY={30}
-        legends={{
-          left: 'Strom [A]',
-          bottom: getIntervalFor(chargingCurrents.length, TIME_REF_SHORT)
-        }} />
+        minY={0}
+        ySteps={6}
+        interval={getIntervalFor(chargingCurrents.length, TIME_REF_SHORT)}
+        unit='A'
+        enableArea
+      />
     </Section>
   );
 };

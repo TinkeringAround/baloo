@@ -1,7 +1,9 @@
-import { BalooDataEntry, BalooStore } from './index';
-import { map } from '../util';
+import { BalooData, BalooDataEntry, BalooSnapshot, BalooState } from './index';
 
-export const toBalooStore = (balooDataEntries: BalooDataEntry[]): BalooStore => {
+// Libs
+import { lastElement, map } from '../lib/util';
+
+export const toBalooStateWithSnapshot = (entries: BalooDataEntry[]): BalooState => {
   const temperatures: number[] = [];
   const humidities: number[] = [];
   const voltages: number[] = [];
@@ -10,7 +12,7 @@ export const toBalooStore = (balooDataEntries: BalooDataEntry[]): BalooStore => 
   const capacities: number[] = [];
   const powers: number[] = [];
 
-  balooDataEntries.forEach(entry => {
+  entries.forEach(entry => {
     if (entry.temperature) {
       temperatures.push(entry.temperature / 10);
     }
@@ -26,7 +28,7 @@ export const toBalooStore = (balooDataEntries: BalooDataEntry[]): BalooStore => 
     powers.push(calculatePower(entry.chargingCurrent, entry.loadCurrent, entry.voltage));
   });
 
-  return {
+  const data: BalooData = {
     temperatures,
     humidities,
     voltages,
@@ -34,6 +36,21 @@ export const toBalooStore = (balooDataEntries: BalooDataEntry[]): BalooStore => 
     loadCurrents,
     capacities,
     powers
+  };
+
+  const snapshot: BalooSnapshot = {
+    temperature: lastElement(temperatures),
+    humidity: lastElement(humidities),
+    chargingCurrent: lastElement(chargingCurrents),
+    loadCurrent: lastElement(loadCurrents),
+    voltage: lastElement(voltages),
+    capacity: lastElement(capacities),
+    power: lastElement(powers)
+  };
+
+  return {
+    ...data,
+    ...snapshot
   };
 };
 
