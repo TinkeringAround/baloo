@@ -1,5 +1,4 @@
 # Baloo
-[![Netlify Status](https://api.netlify.com/api/v1/badges/1e591a42-3480-4c45-ad50-775baff801c1/deploy-status)](https://app.netlify.com/sites/baloo/deploys)
 
 ## Available Scripts
 
@@ -17,3 +16,13 @@ You will also see any lint errors in the console.
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
+
+
+## Deployment
+1. Execute `yarn build`
+2. Copy bundles _css_ and _js_ into _index.html_
+3. Copy _index.html_, _manifest.json_ and _icons.icns_ to /data of webserver project for ESP8266
+4. Upload files via _Arduino IDE > Esp8266 Sketch Data Upload_
+
+## Accessing
+In Baloo Network access via `https://192.168.4.1`.
