@@ -23,6 +23,11 @@ export const getIntervalFor = (length: number, interval: 'short' | 'long' = 'sho
   let minutes;
   let hours;
 
+  if (length < 1) {
+    return '';
+  }
+
+  length -= 1;
   if (interval === 'short') {
     minutesFraction = length % 4;
     hoursFraction = length % (4 * 60);
@@ -40,7 +45,6 @@ export const getIntervalFor = (length: number, interval: 'short' | 'long' = 'sho
   if (hours > 0) {
     const isOne = hours === 1;
     prefix += `${isOne ? '' : hours} Stunde${isOne ? '' : 'n'}`;
-
     minutes -= hours * 60;
 
     if (minutes > 0) {

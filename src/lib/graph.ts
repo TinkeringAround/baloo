@@ -1,4 +1,4 @@
-export const dataMinShortInterval = 4;
+export const dataMinShortInterval = 5;
 export const dataMinLongInterval = 2;
 
 export interface Point {
