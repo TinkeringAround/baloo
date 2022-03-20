@@ -10,15 +10,16 @@ import useConfiguration from '../hook/useConfiguration';
 // Components
 import Section from './section';
 import Base from './base';
+import NoData from './noData';
 import Graph from './graph';
 
 // Libs
 import { Fields, getIntervalFor, toValue } from '../lib/util';
-import { Line, toLine } from '../lib/graph';
+import { dataMinShortInterval, Line, toLine } from '../lib/graph';
 
 const Voltage: FC = () => {
   const theme = useContext(ThemeContext);
-  const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
+  const { SAMPLES } = useConfiguration();
   const { voltage, voltages } = useContext(BalooStateContext);
   const [data, setData] = useState<Line[]>([]);
 
@@ -33,13 +34,14 @@ const Voltage: FC = () => {
         colors={[theme.blue]}
         title='Spannung'
         values={[toValue(voltage, 'V', 2)]} />
+      <NoData isShowing={voltages.length < dataMinShortInterval} />
       <Graph
         data={data}
         colors={[theme.blue]}
         maxY={14}
         minY={10}
         ySteps={4}
-        interval={getIntervalFor(voltages.length, TIME_REF_SHORT)}
+        interval={getIntervalFor(voltages.length)}
         unit='V'
       />
     </Section>

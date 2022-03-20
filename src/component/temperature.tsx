@@ -11,19 +11,20 @@ import useConfiguration from '../hook/useConfiguration';
 import Section from './section';
 import Base from './base';
 import Graph from './graph';
+import NoData from './noData';
 
 // Utils
 import { Fields, getIntervalFor, toValue } from '../lib/util';
-import { Line, toLine } from '../lib/graph';
+import { dataMinLongInterval, Line, toLine } from '../lib/graph';
 
 const Temperature: FC = () => {
   const theme = useContext(ThemeContext);
-  const { SAMPLES, TIME_REF_LONG } = useConfiguration();
+  const { SAMPLES } = useConfiguration();
   const { temperature, temperatures } = useContext(BalooStateContext);
   const [data, setData] = useState<Line[]>([]);
 
   useEffect(() => {
-    setData([toLine(temperatures, 'temperature', SAMPLES)]);
+    setData([toLine(temperatures, 'temperature', SAMPLES, dataMinLongInterval)]);
   }, [temperatures, SAMPLES]);
 
   return (
@@ -33,14 +34,16 @@ const Temperature: FC = () => {
         colors={[theme.red]}
         title='Temperatur'
         values={[toValue(temperature, '°C')]} />
+      <NoData isShowing={temperatures.length < dataMinLongInterval} />
       <Graph
         data={data}
         colors={[theme.red]}
         maxY={40}
         minY={0}
         ySteps={8}
-        interval={getIntervalFor(temperatures.length, TIME_REF_LONG)}
+        interval={getIntervalFor(temperatures.length, 'long')}
         unit='°C'
+        minCount={dataMinLongInterval}
       />
     </Section>
   );

@@ -17,23 +17,42 @@ export const lastElement = (array: Array<number>) => array[array.length - 1] ?? 
 export const toValue = (value: number, unit: string, fractions = 0) =>
   `${value.toFixed(fractions)}${unit}`;
 
-export const getIntervalFor = (length: number, timeRef: number) => {
-  const time = new Date(length * timeRef);
-  const hours = time.getHours();
-  const minutes = time.getMinutes();
+export const getIntervalFor = (length: number, interval: 'short' | 'long' = 'short') => {
+  let minutesFraction;
+  let hoursFraction;
+  let minutes;
+  let hours;
+
+  if (interval === 'short') {
+    minutesFraction = length % 4;
+    hoursFraction = length % (4 * 60);
+
+    minutes = Math.round((length - minutesFraction) / 4);
+    hours = Math.round((length - hoursFraction) / (4 * 60));
+  } else {
+    hoursFraction = length % 4;
+
+    minutes = length * 15;
+    hours = Math.round((length - hoursFraction) / 4);
+  }
 
   let prefix = 'Messung der letzten ';
   if (hours > 0) {
-    prefix += `${hours - 1} Stunden`;
+    const isOne = hours === 1;
+    prefix += `${isOne ? '' : hours} Stunde${isOne ? '' : 'n'}`;
+
+    minutes -= hours * 60;
 
     if (minutes > 0) {
-      return `${prefix} und ${minutes} Minuten`;
+      const isOne = minutes === 1;
+      return `${prefix} und ${isOne ? 'einer' : minutes} Minute${isOne ? '' : 'n'}`;
     } else
       return prefix;
   }
 
   if (minutes > 0) {
-    return `${prefix}${minutes} Minuten`;
+    const isOne = minutes === 1;
+    return `${prefix}${isOne ? '' : minutes} Minute${isOne ? '' : 'n'}`;
   }
 
   return '';

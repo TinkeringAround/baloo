@@ -11,14 +11,15 @@ import useConfiguration from '../hook/useConfiguration';
 import Section from './section';
 import Base from './base';
 import Graph from './graph';
+import NoData from './noData';
 
 // Utils
 import { Fields, getIntervalFor, toValue } from '../lib/util';
-import { Line, toLine } from '../lib/graph';
+import { dataMinShortInterval, Line, toLine } from '../lib/graph';
 
 const Current: FC = () => {
   const theme = useContext(ThemeContext);
-  const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
+  const { SAMPLES } = useConfiguration();
   const { chargingCurrent, loadCurrent, loadCurrents, chargingCurrents } = useContext(BalooStateContext);
   const [data, setData] = useState<Line[]>([]);
 
@@ -40,13 +41,14 @@ const Current: FC = () => {
           toValue(loadCurrent, 'A', 2)
         ]}
       />
+      <NoData isShowing={Math.min(chargingCurrents.length, loadCurrents.length) < dataMinShortInterval} />
       <Graph
         data={data}
         colors={[theme.green, theme.red]}
         maxY={30}
         minY={0}
         ySteps={6}
-        interval={getIntervalFor(chargingCurrents.length, TIME_REF_SHORT)}
+        interval={getIntervalFor(chargingCurrents.length)}
         unit='A'
         enableArea
       />

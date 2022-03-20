@@ -11,14 +11,15 @@ import useConfiguration from '../hook/useConfiguration';
 import Section from './section';
 import Base from './base';
 import Graph from './graph';
+import NoData from './noData';
 
 // Utils
 import { Fields, getIntervalFor, toValue } from '../lib/util';
-import { Line, toLine } from '../lib/graph';
+import { dataMinShortInterval, Line, toLine } from '../lib/graph';
 
 const Power: FC = () => {
   const theme = useContext(ThemeContext);
-  const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
+  const { SAMPLES } = useConfiguration();
   const { power, powers } = useContext(BalooStateContext);
   const [data, setData] = useState<Line[]>([]);
 
@@ -34,13 +35,14 @@ const Power: FC = () => {
         title='Leistung'
         values={[toValue(power, 'W')]}
       />
+      <NoData isShowing={powers.length < dataMinShortInterval} />
       <Graph
         data={data}
         colors={[theme.green]}
         maxY={1000}
         minY={-1000}
         ySteps={10}
-        interval={getIntervalFor(powers.length, TIME_REF_SHORT)}
+        interval={getIntervalFor(powers.length)}
         unit='W'
       />
     </Section>

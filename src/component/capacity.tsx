@@ -11,14 +11,15 @@ import useConfiguration from '../hook/useConfiguration';
 import Section from './section';
 import Base from './base';
 import Graph from './graph';
+import NoData from './noData';
 
 // Libs
 import { Fields, getIntervalFor, toValue } from '../lib/util';
-import { Line, toLine } from '../lib/graph';
+import { dataMinShortInterval, Line, toLine } from '../lib/graph';
 
 const Capacity: FC = () => {
   const theme = useContext(ThemeContext);
-  const { SAMPLES, TIME_REF_SHORT } = useConfiguration();
+  const { SAMPLES } = useConfiguration();
   const { capacity, capacities } = useContext(BalooStateContext);
   const [data, setData] = useState<Line[]>([]);
 
@@ -33,13 +34,14 @@ const Capacity: FC = () => {
         colors={[theme.yellow]}
         title='Akkukapazität'
         values={[toValue(capacity, '%')]} />
+      <NoData isShowing={capacities.length < dataMinShortInterval} />
       <Graph
         data={data}
         colors={[theme.yellow]}
         maxY={100}
         minY={0}
         ySteps={10}
-        interval={getIntervalFor(capacities.length, TIME_REF_SHORT)}
+        interval={getIntervalFor(capacities.length)}
         unit='%'
         enableArea
       />

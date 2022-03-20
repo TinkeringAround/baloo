@@ -1,8 +1,7 @@
 import { map } from '../lib/util';
 import { BalooDataEntry } from '../context';
 
-export const MOCK_RESPONSE = (): BalooDataEntry[] => {
-  const entryCount = 2880;
+export const MOCK_RESPONSE = (entryCount = 2880): BalooDataEntry[] => {
   return Array.from({ length: entryCount }, (_, index) => {
     const temperature = index % 60 === 0 ?
       { temperature: map(index, 0, entryCount, 200, 250) } :

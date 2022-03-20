@@ -9,7 +9,7 @@ import For from '../for';
 import If from '../if';
 
 // Libs
-import { Line, GridStep, Point } from '../../lib/graph';
+import { Line, GridStep, Point, dataMinShortInterval } from '../../lib/graph';
 import { hexToRGB, map } from '../../lib/util';
 
 interface Props {
@@ -22,6 +22,7 @@ interface Props {
   ySteps: number;
   unitOffsetX?: number;
   enableArea?: boolean;
+  minCount?: number;
 }
 
 const config = {
@@ -45,7 +46,8 @@ const Graph: FC<Props> = ({
                             unit,
                             ySteps,
                             unitOffsetX = 25,
-                            enableArea = false
+                            enableArea = false,
+                            minCount = dataMinShortInterval
                           }) => {
   const { ref, rect } = useClientRect();
 
@@ -54,6 +56,8 @@ const Graph: FC<Props> = ({
   const [horizontalGrid, setHorizontalGrid] = useState<string>('');
   const [verticalGrid, setVerticalGrid] = useState<string>('');
   const [steps, setSteps] = useState<GridStep[]>([]);
+
+  const isShowing = data.every(line => line.data.length >= minCount);
 
   useEffect(() => {
     const { height, width } = rect;
@@ -167,7 +171,6 @@ const Graph: FC<Props> = ({
           </g>
         </If>
 
-
         <g role='circles'>
           <For values={points}
                projector={(dataPoints, i) =>
@@ -186,12 +189,14 @@ const Graph: FC<Props> = ({
           />
         </g>
 
-        <g role='legend'>
-          <text x={rect.width / 2}
-                y={rect.height - config.padding.bottom + config.overflowY}>
-            {interval}
-          </text>
-        </g>
+        <If condition={isShowing}>
+          <g role='legend'>
+            <text x={rect.width / 2}
+                  y={rect.height - config.padding.bottom + config.overflowY}>
+              {interval}
+            </text>
+          </g>
+        </If>
       </svg>
     </SGraph>
   );

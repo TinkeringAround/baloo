@@ -1,3 +1,6 @@
+export const dataMinShortInterval = 4;
+export const dataMinLongInterval = 2;
+
 export interface Point {
   x: number;
   y: number;
@@ -15,12 +18,20 @@ export interface GridStep extends Point {
 export const linear = (before: number, after: number, atPoint: number): number =>
   before + (after - before) * atPoint;
 
-export const interpolate = (data: number[], fitCount: number): number[] => {
+export const interpolate = (data: number[], samples: number, minCount: number = dataMinShortInterval): number[] => {
+  if (data.length < minCount) {
+    return [];
+  }
+
+  if (data.length < samples) {
+    return data;
+  }
+
   const newData = [];
-  const springFactor = Number((data.length - 1) / (fitCount - 1));
+  const springFactor = Number((data.length - 1) / (samples - 1));
 
   newData[0] = data[0]; // for new allocation
-  for (let i = 1; i < fitCount - 1; i++) {
+  for (let i = 1; i < samples - 1; i++) {
     const tmp = i * springFactor;
     const before = Math.round(Number(Math.floor(tmp)));
     const after = Math.round(Number(Math.ceil(tmp)));
@@ -30,11 +41,11 @@ export const interpolate = (data: number[], fitCount: number): number[] => {
     newData[i] = linear(data[before], data[after], atPoint);
   }
 
-  newData[fitCount - 1] = data[data.length - 1]; // for new allocation
+  newData[samples - 1] = data[data.length - 1]; // for new allocation
   return newData;
 };
 
-export const toLine = (values: number[], id: string, samples = 100000): Line => ({
+export const toLine = (values: number[], id: string, samples = 100000, minCount = dataMinShortInterval): Line => ({
   id,
-  data: interpolate(values, samples).map((y, x) => ({ x, y }))
+  data: interpolate(values, samples, minCount).map((y, x) => ({ x, y }))
 });
