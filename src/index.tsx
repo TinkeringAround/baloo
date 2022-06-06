@@ -27,10 +27,14 @@ import Current from './component/current';
 import Capacity from './component/capacity';
 import If from './component/if';
 import Overview from './component/overview';
+import Logs from './component/logs';
+import LogDialog from './component/log-dialog';
+import Reset from './component/reset';
 
 const App: FC = () => {
   const { data, error, loading, fetchData } = useData();
   const [state, setState] = useState<BalooState>(INITIAL_STATE);
+  const [showLogs, setShowLogs] = useState<boolean>(false);
 
   useEffect(() => {
     data && setState(data);
@@ -44,6 +48,8 @@ const App: FC = () => {
         </If>
         <Header isHealthy={!error}>
           <Logo />
+          <Reset disabled={loading} isHealthy={!error} />
+          <Logs showLogs={() => setShowLogs(true)} isHealthy={!error} />
           <Reload reload={fetchData} disabled={loading} isHealthy={!error} />
         </Header>
         <If condition={!!data && !error}>
@@ -57,6 +63,9 @@ const App: FC = () => {
               <Temperature />
               <Humidity />
             </Content>
+            <If condition={showLogs}>
+              <LogDialog setState={setState} hide={() => setShowLogs(false)} />
+            </If>
           </BalooStateContext.Provider>
         </If>
       </Layout>

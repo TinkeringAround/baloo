@@ -2,9 +2,9 @@ import React, { FC, useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 
 const SHeader = styled.header`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(3, min-content);
+  grid-template-rows: minmax(0, 1fr);
   align-items: center;
 
   height: 4.5rem;

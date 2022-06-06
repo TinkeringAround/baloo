@@ -4,7 +4,7 @@ import styled, { ThemeContext } from 'styled-components';
 // Components
 import Icon from './icon';
 
-const SReload = styled.button`
+const SReset = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,18 +24,17 @@ const SReload = styled.button`
 
 interface Props {
   disabled: boolean;
-  reload: () => {};
   isHealthy: boolean;
 }
 
-const Reload: FC<Props> = ({ disabled, reload, isHealthy }) => {
+const Reset: FC<Props> = ({ disabled, isHealthy }) => {
   const theme = useContext(ThemeContext);
 
   return (
-    <SReload onClick={reload} disabled={disabled}>
-      <Icon type='reload' color={theme[isHealthy ? "yellow" : "red"]} height='25px' width='25px' />
-    </SReload>
+    <SReset onClick={() => fetch('http://192.168.4.1/reset')} disabled={disabled}>
+      <Icon type='restart' color={theme[isHealthy ? "yellow" : "red"]} height='25px' width='25px' />
+    </SReset>
   );
 };
 
-export default Reload;
+export default Reset;

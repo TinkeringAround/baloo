@@ -4,7 +4,7 @@ import styled, { ThemeContext } from 'styled-components';
 // Components
 import Icon from './icon';
 
-const SReload = styled.button`
+const SLogs = styled.button<{ isHealthy: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,23 +19,22 @@ const SReload = styled.button`
   outline: none;
   border: none;
 
-  cursor: pointer;
+  cursor: ${({ isHealthy }) => isHealthy ? 'pointer' : 'default'};
 `;
 
 interface Props {
-  disabled: boolean;
-  reload: () => {};
   isHealthy: boolean;
+  showLogs: () => void;
 }
 
-const Reload: FC<Props> = ({ disabled, reload, isHealthy }) => {
+const Logs: FC<Props> = ({ showLogs, isHealthy }) => {
   const theme = useContext(ThemeContext);
 
   return (
-    <SReload onClick={reload} disabled={disabled}>
-      <Icon type='reload' color={theme[isHealthy ? "yellow" : "red"]} height='25px' width='25px' />
-    </SReload>
+    <SLogs isHealthy={isHealthy} onClick={isHealthy ? showLogs : undefined}>
+      <Icon type='console' color={theme[isHealthy ? 'yellow' : 'red']} height='25px' width='25px' />
+    </SLogs>
   );
 };
 
-export default Reload;
+export default Logs;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 // Hook
 import { useFetch } from './useFetch';
-import { BalooDataEntry, BalooState } from '../context';
+import { BalooDataEntry, BalooState, INITIAL_STATE } from '../context';
 
 // Util
 import { toBalooStateWithSnapshot } from '../context/model';
@@ -12,7 +12,15 @@ export function useData() {
   const [data, setData] = useState<BalooState | null>(null);
 
   useEffect(() => {
-    response && setData(toBalooStateWithSnapshot(response as BalooDataEntry[]));
+    if (response) {
+      try {
+        const balooDataEntries = JSON.parse('[' + response + ']') as BalooDataEntry[];
+        setData(toBalooStateWithSnapshot(balooDataEntries));
+      } catch (e) {
+        console.error(e);
+        setData(INITIAL_STATE);
+      }
+    }
   }, [response]);
 
   return { data, error, loading, fetchData };

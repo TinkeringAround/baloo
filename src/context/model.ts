@@ -14,16 +14,16 @@ export const toBalooStateWithSnapshot = (entries: BalooDataEntry[]): BalooState 
 
   entries.forEach(entry => {
     if (entry.temperature) {
-      temperatures.push(entry.temperature / 10);
+      temperatures.push(entry.temperature);
     }
 
     if (entry.humidity) {
-      humidities.push(entry.humidity / 10);
+      humidities.push(entry.humidity);
     }
 
     voltages.push(entry.voltage / 100);
-    chargingCurrents.push(entry.chargingCurrent / 100);
-    loadCurrents.push(entry.loadCurrent / 100);
+    chargingCurrents.push(entry.chargingCurrent / 1000);
+    loadCurrents.push(entry.loadCurrent / 1000);
     capacities.push(estimateCapacity(entry.voltage));
     powers.push(calculatePower(entry.chargingCurrent, entry.loadCurrent, entry.voltage));
   });
@@ -50,7 +50,8 @@ export const toBalooStateWithSnapshot = (entries: BalooDataEntry[]): BalooState 
 
   return {
     ...data,
-    ...snapshot
+    ...snapshot,
+    logs: ""
   };
 };
 

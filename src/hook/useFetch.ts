@@ -9,8 +9,9 @@ export function useFetch(url: string, options?: RequestInit) {
     try {
       setLoading(true);
       const res = await fetch(url, options);
-      const json = await res.json();
-      setResponse(json);
+      const text = await res.text();
+      setResponse(text);
+      setError(null);
     } catch (error) {
       setError(error);
     } finally {

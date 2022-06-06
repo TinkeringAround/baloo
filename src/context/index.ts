@@ -14,6 +14,10 @@ interface HasEnvironment {
   readonly humidity: number;
 }
 
+interface HasLogs {
+  logs: string;
+}
+
 export interface BalooDataEntry extends HasCurrent, HasVoltage, Partial<HasEnvironment> {
 }
 
@@ -32,7 +36,7 @@ export interface BalooSnapshot extends HasCurrent, HasVoltage, HasEnvironment {
   readonly capacity: number;
 }
 
-export interface BalooState extends BalooData, BalooSnapshot {
+export interface BalooState extends BalooData, BalooSnapshot, HasLogs {
 }
 
 export const INITIAL_DATA: BalooData = {
@@ -57,7 +61,8 @@ export const INITIAL_SNAPSHOT: BalooSnapshot = {
 
 export const INITIAL_STATE: BalooState = {
   ...INITIAL_DATA,
-  ...INITIAL_SNAPSHOT
+  ...INITIAL_SNAPSHOT,
+  logs: ''
 };
 
 export const BalooStateContext = React.createContext<BalooState>(INITIAL_STATE);
