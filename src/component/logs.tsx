@@ -11,7 +11,7 @@ const SLogs = styled.button<{ isHealthy: boolean }>`
 
   width: 40px;
   height: 40px;
-  margin-left: 1rem;
+  margin-left: 0.5em;
 
   background: ${({ theme }) => theme.white};
 

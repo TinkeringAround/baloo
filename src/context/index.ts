@@ -18,50 +18,22 @@ interface HasLogs {
   logs: string;
 }
 
-export interface BalooDataEntry extends HasCurrent, HasVoltage, Partial<HasEnvironment> {
+export interface BalooDataEntry extends HasCurrent, HasVoltage, HasEnvironment {
 }
 
-export interface BalooData {
-  readonly capacities: number[];
-  readonly chargingCurrents: number[];
-  readonly loadCurrents: number[];
-  readonly voltages: number[];
-  readonly temperatures: number[];
-  readonly humidities: number[];
-  readonly powers: number[];
-}
-
-export interface BalooSnapshot extends HasCurrent, HasVoltage, HasEnvironment {
+export interface BalooState extends HasCurrent, HasVoltage, HasEnvironment, HasLogs {
   readonly power: number;
   readonly capacity: number;
 }
 
-export interface BalooState extends BalooData, BalooSnapshot, HasLogs {
-}
-
-export const INITIAL_DATA: BalooData = {
-  capacities: [],
-  chargingCurrents: [],
-  loadCurrents: [],
-  voltages: [],
-  temperatures: [],
-  humidities: [],
-  powers: []
-};
-
-export const INITIAL_SNAPSHOT: BalooSnapshot = {
+export const INITIAL_STATE: BalooState = {
   chargingCurrent: 0,
   loadCurrent: 0,
   voltage: 0,
   power: 0,
   capacity: 0,
   humidity: 0,
-  temperature: 0
-};
-
-export const INITIAL_STATE: BalooState = {
-  ...INITIAL_DATA,
-  ...INITIAL_SNAPSHOT,
+  temperature: 0,
   logs: ''
 };
 

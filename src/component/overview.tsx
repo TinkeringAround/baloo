@@ -8,22 +8,21 @@ import { BalooStateContext } from '../context';
 import { Breakpoint, useBreakpoint } from '../hook/useBreakpoint';
 
 // Components
-import Section from './section';
-import Base from './base';
 import Icon, { TIcon } from './icon';
 import For from './for';
 
 // Utils
-import { Dict, Fields, toValue } from '../lib/util';
+import { Dict, toValue } from '../lib/util';
 
 const SCurrent = styled.div<{ isCharging: boolean, isFlowing: boolean }>`
   display: grid;
   grid-template-rows: min-content repeat(5, min-content);
   grid-template-columns: minmax(0, 1fr);
   height: 100%;
-  padding: 0 1rem;
+  padding: 1rem;
 
   color: ${({ theme }) => theme.dark};
+  background: ${({ theme }) => theme.light};
   box-sizing: border-box;
 
   overflow: auto;
@@ -41,8 +40,6 @@ const SCurrent = styled.div<{ isCharging: boolean, isFlowing: boolean }>`
          isFlowing,
          isCharging
        }) => isFlowing ? `animation: charging 0.5s infinite linear ${isCharging ? 'reverse' : ''};` : ''};
-
-    border-radius: 3px;
 
     @keyframes charging {
       100% {
@@ -151,8 +148,6 @@ const SCurrent = styled.div<{ isCharging: boolean, isFlowing: boolean }>`
       }
     }
   }
-
-
 `;
 
 const Overview: FC = () => {
@@ -196,19 +191,9 @@ const Overview: FC = () => {
     'temperature': theme.red
   };
 
-  const links: Dict<string> = {
-    'bolt': Fields.voltage,
-    'plug': Fields.power,
-    'battery': Fields.capacity,
-    'humidity': Fields.humidity,
-    'temperature': Fields.temperature
-  };
-
   return (
-    <Section id='overview-list'>
-      <Base title='Übersicht' values={[]} />
       <SCurrent isCharging={isCharging} isFlowing={isFlowing} className={`size-${breakPoint}`}>
-        <a className='row' href={`#${Fields.current}`}>
+        <div className='row'>
           <div className='charging' />
           <span className='title'>Lade-/Laststrom</span>
           <p className='values'>
@@ -216,17 +201,16 @@ const Overview: FC = () => {
             <span className='load'>{toValue(loadCurrent, 'A', 2)} <b>▼</b></span>
             <span className='sum'>{toValue(loadCurrent - chargingCurrent, 'A', 2)} <b>Ø</b></span>
           </p>
-        </a>
+        </div>
         <For values={Object.keys(values)}
              projector={key => (
-               <a key={key} className='row' href={`#${links[key]}`}>
+               <div key={key} className='row'>
                  <Icon type={key as TIcon} color={colors[key]} height={iconSize} width={iconSize} />
                  <span className='title'>{titles[key]}</span>
                  <span>{values[key]}</span>
-               </a>
+               </div>
              )} />
       </SCurrent>
-    </Section>
   );
 };
 

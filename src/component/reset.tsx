@@ -11,7 +11,6 @@ const SReset = styled.button`
 
   width: 40px;
   height: 40px;
-  margin-left: 1rem;
 
   background: ${({ theme }) => theme.white};
 

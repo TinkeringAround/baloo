@@ -11,7 +11,7 @@ const SReload = styled.button`
 
   width: 40px;
   height: 40px;
-  margin-left: 1rem;
+  margin-left: 0.5rem;
 
   background: ${({ theme }) => theme.white};
 

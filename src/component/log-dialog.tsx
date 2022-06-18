@@ -49,6 +49,8 @@ const SLogDialog = styled.div`
     color: ${({ theme }) => theme.dark};
     background: white;
     border-radius: 10px 10px 0 0;
+    word-break: break-word;
+    font-size: 0.8rem;
 
     overflow: auto;
     box-sizing: border-box;
@@ -96,6 +98,7 @@ const LogDialog: FC<Props> = ({ setState, hide }) => {
         {state.logs
           .trim()
           .split(';')
+          .filter(line => line !== "")
           .map((line, index) =>
             <span key={`log-line-${index}`}>&ensp;{line}</span>
           )}

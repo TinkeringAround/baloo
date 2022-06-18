@@ -15,30 +15,29 @@ import { useData } from './hook/useData';
 // Components
 import Layout from './component/layout';
 import Header from './component/header';
-import Content from './component/content';
-import Voltage from './component/voltage';
-import Temperature from './component/temperature';
-import Humidity from './component/humidity';
-import Power from './component/power';
 import Reload from './component/reload';
 import Logo from './component/logo';
 import Loading from './component/loading';
-import Current from './component/current';
-import Capacity from './component/capacity';
 import If from './component/if';
 import Overview from './component/overview';
 import Logs from './component/logs';
 import LogDialog from './component/log-dialog';
 import Reset from './component/reset';
 
+// Utils
+import { toBalooState } from './context/model';
+
 const App: FC = () => {
-  const { data, error, loading, fetchData } = useData();
+  const { data, error, loading, fetchData, consume } = useData();
   const [state, setState] = useState<BalooState>(INITIAL_STATE);
   const [showLogs, setShowLogs] = useState<boolean>(false);
 
   useEffect(() => {
-    data && setState(data);
-  }, [data, setState]);
+    if (data) {
+      setState(toBalooState(data, state));
+      consume();
+    }
+  }, [state, consume, data, setState]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -52,17 +51,9 @@ const App: FC = () => {
           <Logs showLogs={() => setShowLogs(true)} isHealthy={!error} />
           <Reload reload={fetchData} disabled={loading} isHealthy={!error} />
         </Header>
-        <If condition={!!data && !error}>
+        <If condition={!error}>
           <BalooStateContext.Provider value={state}>
-            <Content>
-              <Overview />
-              <Capacity />
-              <Voltage />
-              <Current />
-              <Power />
-              <Temperature />
-              <Humidity />
-            </Content>
+            <Overview />
             <If condition={showLogs}>
               <LogDialog setState={setState} hide={() => setShowLogs(false)} />
             </If>

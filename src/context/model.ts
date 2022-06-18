@@ -1,59 +1,18 @@
-import { BalooData, BalooDataEntry, BalooSnapshot, BalooState } from './index';
+import { BalooDataEntry, BalooState } from './index';
 
 // Libs
-import { lastElement, map } from '../lib/util';
+import { map } from '../lib/util';
 
-export const toBalooStateWithSnapshot = (entries: BalooDataEntry[]): BalooState => {
-  const temperatures: number[] = [];
-  const humidities: number[] = [];
-  const voltages: number[] = [];
-  const chargingCurrents: number[] = [];
-  const loadCurrents: number[] = [];
-  const capacities: number[] = [];
-  const powers: number[] = [];
-
-  entries.forEach(entry => {
-    if (entry.temperature) {
-      temperatures.push(entry.temperature);
-    }
-
-    if (entry.humidity) {
-      humidities.push(entry.humidity);
-    }
-
-    voltages.push(entry.voltage / 100);
-    chargingCurrents.push(entry.chargingCurrent / 1000);
-    loadCurrents.push(entry.loadCurrent / 1000);
-    capacities.push(estimateCapacity(entry.voltage));
-    powers.push(calculatePower(entry.chargingCurrent, entry.loadCurrent, entry.voltage));
-  });
-
-  const data: BalooData = {
-    temperatures,
-    humidities,
-    voltages,
-    chargingCurrents,
-    loadCurrents,
-    capacities,
-    powers
-  };
-
-  const snapshot: BalooSnapshot = {
-    temperature: lastElement(temperatures),
-    humidity: lastElement(humidities),
-    chargingCurrent: lastElement(chargingCurrents),
-    loadCurrent: lastElement(loadCurrents),
-    voltage: lastElement(voltages),
-    capacity: lastElement(capacities),
-    power: lastElement(powers)
-  };
-
-  return {
-    ...data,
-    ...snapshot,
-    logs: ""
-  };
-};
+export const toBalooState = (entry: BalooDataEntry, state: BalooState): BalooState => ({
+  temperature: entry.temperature,
+  humidity: entry.humidity,
+  chargingCurrent: entry.chargingCurrent / 1000,
+  loadCurrent: entry.loadCurrent / 1000,
+  voltage: entry.voltage / 100,
+  capacity: estimateCapacity(entry.voltage),
+  power: calculatePower(entry.chargingCurrent, entry.loadCurrent, entry.voltage),
+  logs: state.logs
+});
 
 const estimateCapacity = (normalizedVoltage: number) => {
   if (normalizedVoltage > 1280)
@@ -71,5 +30,5 @@ const estimateCapacity = (normalizedVoltage: number) => {
 };
 
 const calculatePower = (normalizedChargingCurrent: number, normalizedLoadCurrent: number, normalizedVoltage: number) => {
-  return (normalizedChargingCurrent - normalizedLoadCurrent) * normalizedVoltage / 10000;
+  return (normalizedLoadCurrent - normalizedChargingCurrent) * normalizedVoltage / 100000;
 };
