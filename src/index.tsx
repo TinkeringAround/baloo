@@ -39,6 +39,12 @@ const App: FC = () => {
     }
   }, [state, consume, data, setState]);
 
+  useEffect(() => {
+    setInterval(() => {
+      fetchData();
+    }, 20000);
+  }, [fetchData]);
+
   return (
     <ThemeProvider theme={theme}>
       <Layout>
